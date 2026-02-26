@@ -456,6 +456,41 @@ RULES:
         return {"summary": result, "moments": [], "topics": []}
 
 
+@app.post("/api/tts")
+async def text_to_speech(request: Request):
+    """Convert text to speech using ElevenLabs."""
+    body = await request.json()
+    text = body.get("text", "")
+    if not text:
+        return JSONResponse({"error": "No text"}, status_code=400)
+
+    api_key = os.getenv("ELEVENLABS_API_KEY", "")
+    if not api_key:
+        return JSONResponse({"error": "No ElevenLabs API key"}, status_code=500)
+
+    import httpx
+    voice_id = "JBFqnCBsd6RMkjVDRZzb"  # George — warm male voice
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
+            headers={
+                "xi-api-key": api_key,
+                "Content-Type": "application/json",
+            },
+            json={
+                "text": text,
+                "model_id": "eleven_turbo_v2",
+                "voice_settings": {"stability": 0.5, "similarity_boost": 0.75}
+            },
+            timeout=30.0,
+        )
+        if resp.status_code != 200:
+            return JSONResponse({"error": f"ElevenLabs error {resp.status_code}"}, status_code=502)
+
+        audio_b64 = base64.b64encode(resp.content).decode()
+        return {"audio": audio_b64}
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

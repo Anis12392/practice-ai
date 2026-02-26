@@ -1273,14 +1273,43 @@
     msgs.scrollTop = msgs.scrollHeight;
   }
 
-  function speakText(text, btn) {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 1;
-      utterance.onstart = () => { btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> playing...`; };
-      utterance.onend = () => { btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> replay`; };
-      window.speechSynthesis.speak(utterance);
+  let currentAudio = null;
+
+  async function speakText(text, btn) {
+    // Stop any currently playing audio
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
+    }
+
+    const playIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+    const pauseIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+
+    btn.innerHTML = `${pauseIcon} loading...`;
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      const data = await res.json();
+
+      if (data.audio) {
+        const audio = new Audio(`data:audio/mpeg;base64,${data.audio}`);
+        currentAudio = audio;
+        audio.onplay = () => { btn.innerHTML = `${pauseIcon} playing...`; btn.disabled = false; };
+        audio.onended = () => { btn.innerHTML = `${playIcon} replay`; btn.disabled = false; currentAudio = null; };
+        audio.onerror = () => { btn.innerHTML = `${playIcon} replay`; btn.disabled = false; currentAudio = null; };
+        audio.play();
+      } else {
+        btn.innerHTML = `${playIcon} error`;
+        btn.disabled = false;
+      }
+    } catch (e) {
+      btn.innerHTML = `${playIcon} retry`;
+      btn.disabled = false;
     }
   }
 
