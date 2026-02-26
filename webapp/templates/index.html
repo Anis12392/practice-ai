@@ -1227,7 +1227,10 @@
     currentDayPhotos = data.photos || [];
 
     if (data.messages && data.messages.length > 0) {
-      data.messages.forEach(m => addMessage(m.role === 'assistant' ? 'ai' : 'user', m.content));
+      data.messages.forEach(m => {
+        if (m.content === '[START]') return;
+        addMessage(m.role === 'assistant' ? 'ai' : 'user', m.content);
+      });
       showPage('chat');
     } else {
       showPage('chat');
