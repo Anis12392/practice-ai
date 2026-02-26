@@ -1297,7 +1297,8 @@
       const data = await res.json();
 
       if (data.audio) {
-        const audio = new Audio(`data:audio/mpeg;base64,${data.audio}`);
+        const mime = data.mime || 'audio/wav';
+        const audio = new Audio(`data:${mime};base64,${data.audio}`);
         currentAudio = audio;
         audio.onplay = () => { btn.innerHTML = `${pauseIcon} playing...`; btn.disabled = false; };
         audio.onended = () => { btn.innerHTML = `${playIcon} replay`; btn.disabled = false; currentAudio = null; };

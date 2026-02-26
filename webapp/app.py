@@ -458,37 +458,43 @@ RULES:
 
 @app.post("/api/tts")
 async def text_to_speech(request: Request):
-    """Convert text to speech using ElevenLabs."""
+    """Convert text to speech using Gemini TTS."""
     body = await request.json()
     text = body.get("text", "")
     if not text:
         return JSONResponse({"error": "No text"}, status_code=400)
 
-    api_key = os.getenv("ELEVENLABS_API_KEY", "")
+    api_key = os.getenv("GOOGLE_API_KEY", "")
     if not api_key:
-        return JSONResponse({"error": "No ElevenLabs API key"}, status_code=500)
+        return JSONResponse({"error": "No Google API key"}, status_code=500)
 
     import httpx
-    voice_id = "JBFqnCBsd6RMkjVDRZzb"  # George — warm male voice
     async with httpx.AsyncClient() as client:
         resp = await client.post(
-            f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
-            headers={
-                "xi-api-key": api_key,
-                "Content-Type": "application/json",
-            },
+            f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key={api_key}",
+            headers={"Content-Type": "application/json"},
             json={
-                "text": text,
-                "model_id": "eleven_turbo_v2",
-                "voice_settings": {"stability": 0.5, "similarity_boost": 0.75}
+                "contents": [{"parts": [{"text": text}]}],
+                "generationConfig": {
+                    "response_modalities": ["AUDIO"],
+                    "speech_config": {
+                        "voice_config": {
+                            "prebuilt_voice_config": {"voice_name": "Kore"}
+                        }
+                    }
+                }
             },
             timeout=30.0,
         )
         if resp.status_code != 200:
-            return JSONResponse({"error": f"ElevenLabs error {resp.status_code}"}, status_code=502)
+            return JSONResponse({"error": f"Gemini TTS error {resp.status_code}"}, status_code=502)
 
-        audio_b64 = base64.b64encode(resp.content).decode()
-        return {"audio": audio_b64}
+        data = resp.json()
+        try:
+            audio_b64 = data["candidates"][0]["content"]["parts"][0]["inlineData"]["data"]
+            return {"audio": audio_b64, "mime": "audio/wav"}
+        except (KeyError, IndexError):
+            return JSONResponse({"error": "No audio in response"}, status_code=502)
 
 
 if __name__ == "__main__":
