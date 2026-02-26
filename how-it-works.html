@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dump.ai — How It Works</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 60px;
+        }
+
+        /* Problem */
+        .problem {
+            background: #1a0a0a;
+            border: 1px solid #331111;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 40px;
+        }
+        .problem h2 { color: #ff4444; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
+        .problem p { font-size: 18px; color: #ccc; }
+        .problem .highlight { color: #ff6666; font-weight: 600; }
+
+        /* Flow */
+        .flow { margin-bottom: 60px; }
+        .flow h2 {
+            color: #00cc88;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+        .step-number {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            background: #1a1a2e;
+            border: 2px solid #00cc88;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #00cc88;
+        }
+        .step-content h3 { font-size: 20px; color: #fff; margin-bottom: 4px; }
+        .step-content p { color: #999; font-size: 15px; }
+
+        .arrow {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            margin: -12px 0 -12px 12px;
+        }
+
+        /* Before/After */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+        .before, .after {
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .before {
+            background: #1a0a0a;
+            border: 1px solid #331111;
+        }
+        .after {
+            background: #0a1a10;
+            border: 1px solid #113322;
+        }
+        .before h3 { color: #ff4444; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
+        .after h3 { color: #00cc88; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
+        .dump-text {
+            font-family: monospace;
+            font-size: 13px;
+            color: #888;
+            background: #111;
+            padding: 16px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+        }
+        .post-text {
+            font-size: 15px;
+            color: #ddd;
+            background: #111;
+            padding: 16px;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+        .platform-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .tag-x { background: #1a1a2e; color: #4a9eff; }
+        .tag-linkedin { background: #0a1a2e; color: #0077b5; }
+
+        /* Onboarding */
+        .onboarding {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 60px;
+        }
+        .onboarding h2 {
+            color: #ffaa00;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+        .profile-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .field {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        .field label { display: block; font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .field span { font-size: 14px; color: #ccc; }
+
+        /* Inputs */
+        .inputs {
+            margin-bottom: 60px;
+        }
+        .inputs h2 {
+            color: #aa66ff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .input-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .input-icon { font-size: 32px; margin-bottom: 8px; }
+        .input-card h4 { font-size: 14px; color: #fff; margin-bottom: 4px; }
+        .input-card p { font-size: 12px; color: #666; }
+
+        /* Vision */
+        .vision {
+            background: linear-gradient(135deg, #0a1a2e, #1a0a2e);
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 32px;
+        }
+        .vision h2 {
+            color: #4a9eff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+        .vision ul { list-style: none; }
+        .vision li {
+            padding: 8px 0;
+            color: #aaa;
+            font-size: 15px;
+            border-bottom: 1px solid #1a1a2e;
+        }
+        .vision li::before { content: "-> "; color: #4a9eff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <h1>dump.ai</h1>
+        <p class="subtitle">raw thoughts in. polished posts out.</p>
+
+        <!-- PROBLEM -->
+        <div class="problem">
+            <h2>The Problem</h2>
+            <p>
+                You have <span class="highlight">things to say</span> but you're stuck between
+                <span class="highlight">thinking</span> and <span class="highlight">formatting</span>.
+                <br><br>
+                You try to think AND write a tweet at the same time. Result: nothing gets posted.
+                <br><br>
+                Dump.ai separates the two. <strong>You think. We format.</strong>
+            </p>
+        </div>
+
+        <!-- FLOW -->
+        <div class="flow">
+            <h2>How It Works</h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Setup your brand (once)</h3>
+                    <p>Who you are, your goals, your tone, examples of posts you like. The AI learns YOUR voice.</p>
+                </div>
+            </div>
+            <div class="arrow">|</div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Dump your thoughts</h3>
+                    <p>Talk, type, send a photo, or a voice memo. No structure needed. Just dump what happened today.</p>
+                </div>
+            </div>
+            <div class="arrow">|</div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Get posts</h3>
+                    <p>3 tweet options + 1 LinkedIn post. In YOUR tone. Aligned with YOUR goals. Ready to publish.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BEFORE / AFTER -->
+        <div class="comparison">
+            <div class="before">
+                <h3>Your dump (raw)</h3>
+                <div class="dump-text">hier j'ai visité les bureaux
+d'une boite de robotics et
+j'etais juste obsédé par leur
+systeme de recharge. ils ont
+un truc conductive au sol,
+propriétaire, massif. ça m'a
+fait penser aux chargeurs
+de telephone avant qu'on
+standardise tout...</div>
+            </div>
+            <div class="after">
+                <h3>What comes out</h3>
+                <span class="platform-tag tag-x">X / Twitter</span>
+                <div class="post-text">saw a 200lb robot crawl to a floor-mounted proprietary charging dock yesterday.
+
+felt like 2008 phone chargers all over again.</div>
+                <br>
+                <span class="platform-tag tag-linkedin">LinkedIn</span>
+                <div class="post-text" style="font-size: 13px;">visited a robotics company yesterday. got completely sidetracked by their charging system...</div>
+            </div>
+        </div>
+
+        <!-- ONBOARDING -->
+        <div class="onboarding">
+            <h2>Your Profile (set once)</h2>
+            <div class="profile-fields">
+                <div class="field">
+                    <label>Role</label>
+                    <span>CEO & Co-Founder @ Chargebotic</span>
+                </div>
+                <div class="field">
+                    <label>Objective</label>
+                    <span>Raise pre-seed, thought leadership</span>
+                </div>
+                <div class="field">
+                    <label>Themes</label>
+                    <span>Robotics infra, deep tech, energy</span>
+                </div>
+                <div class="field">
+                    <label>Tone</label>
+                    <span>Casual, lowercase, contrarian</span>
+                </div>
+                <div class="field">
+                    <label>Brand</label>
+                    <span>"the guy who looks at the charger, not the robot"</span>
+                </div>
+                <div class="field">
+                    <label>Avoid</label>
+                    <span>Corporate speak, hashtags, emojis</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- INPUT TYPES -->
+        <div class="inputs">
+            <h2>Ways to Dump</h2>
+            <div class="input-grid">
+                <div class="input-card">
+                    <div class="input-icon">T</div>
+                    <h4>Text</h4>
+                    <p>Type whatever comes to mind</p>
+                </div>
+                <div class="input-card">
+                    <div class="input-icon">M</div>
+                    <h4>Voice</h4>
+                    <p>Talk into your phone</p>
+                </div>
+                <div class="input-card">
+                    <div class="input-icon">P</div>
+                    <h4>Photo</h4>
+                    <p>AI describes what it sees</p>
+                </div>
+                <div class="input-card">
+                    <div class="input-icon">A</div>
+                    <h4>Auto</h4>
+                    <p>App checks your photos daily</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISION -->
+        <div class="vision">
+            <h2>Vision</h2>
+            <ul>
+                <li>MVP: CLI script (done)</li>
+                <li>Next: Web app with voice + photo upload</li>
+                <li>Then: Mobile app with gallery access + daily prompts</li>
+                <li>Future: Auto-publish to X and LinkedIn</li>
+                <li>Future: Learn from your past posts to improve over time</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>

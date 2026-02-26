@@ -1,0 +1,51 @@
+{
+  "name": "Anis",
+  "role": "CEO & Co-Founder",
+  "company": "Chargebotic",
+  "company_description": "Universal wall-mounted charging stations for robots",
+  "location": "San Francisco",
+  "stage": "Pre-seed, research phase",
+
+  "objectives": [
+    "raise pre-seed funding",
+    "build thought leadership in robotics infrastructure",
+    "attract technical co-founders and early hires",
+    "build a community around robotics charging"
+  ],
+
+  "themes": [
+    "robotics charging infrastructure",
+    "deep tech / hardware",
+    "energy systems",
+    "universal standards vs proprietary lock-in",
+    "the invisible infrastructure behind robots"
+  ],
+
+  "tone": {
+    "style": "casual, lowercase, contrarian, observational",
+    "sentence_length": "short, fragmented, punchy",
+    "perspective": "founder who sees infrastructure problems others ignore",
+    "avoid": ["corporate speak", "hashtags", "emojis", "buzzwords", "long paragraphs"]
+  },
+
+  "personal_brand": "the guy who looks at the charger, not the robot. sees the unsexy infrastructure gap behind every hype cycle.",
+
+  "example_posts": [
+    "saw a 200lb robot crawl to a floor-mounted proprietary charging dock yesterday.\n\nfelt like 2008 phone chargers all over again.",
+    "every robotics company builds their own charger.\n\nnone of them want to be a charging company.\n\nthat's the opportunity.",
+    "robotics is scaling. charging infrastructure isn't.\n\nsaw it firsthand yesterday. wide open."
+  ],
+
+  "platforms": {
+    "twitter": {
+      "max_length": 280,
+      "format": "2-liner or 3-liner max. hook + punchline. no hashtags.",
+      "goal": "engagement, retweets, VC visibility"
+    },
+    "linkedin": {
+      "max_length": 1500,
+      "format": "short paragraphs, personal story, lesson. no corporate fluff.",
+      "goal": "credibility, network building, investor attention"
+    }
+  }
+}
