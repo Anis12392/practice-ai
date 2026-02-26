@@ -155,7 +155,7 @@ async def describe_photo(img_base64: str) -> str:
         try:
             import google.generativeai as genai
             genai.configure(api_key=gemini_key)
-            model = genai.GenerativeModel("gemini-2.0-flash-001")
+            model = genai.GenerativeModel("gemini-2.5-flash")
             response = model.generate_content([
                 "Describe this photo in 1-2 sentences. What's happening? Where is it? What objects or people are visible? Be specific and factual.",
                 {"mime_type": "image/jpeg", "data": base64.b64decode(img_base64)}
@@ -383,7 +383,7 @@ async def call_ai(system: str, messages: list) -> str:
         try:
             import google.generativeai as genai
             genai.configure(api_key=gemini_key)
-            model = genai.GenerativeModel("gemini-2.0-flash-001")
+            model = genai.GenerativeModel("gemini-2.5-flash")
             prompt = f"SYSTEM:\n{system}\n\nCONVERSATION:\n"
             for m in messages:
                 prompt += f"{m['role'].upper()}: {m['content']}\n"
